@@ -1,6 +1,10 @@
+import { Stack } from "@mantine/core";
+
 function RatedMovies() {
   return(
-    <>rated movies</>
+    <Stack>
+      <h2>Rated movies</h2>
+    </Stack>
   )
 }
 
