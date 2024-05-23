@@ -44,3 +44,8 @@ export interface MoviesDataType {
 export interface GenreDataType {
   genres: GenreType[],
 }
+
+export interface RatedMovie {
+  id: number,
+  rating: number,
+}
