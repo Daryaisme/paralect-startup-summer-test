@@ -13,6 +13,7 @@ import { formatVotesCount } from '../movieCard/MovieCard';
 import classes from './MovieDetailsCard.module.css';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import RatingModal from '../../ratingModal/RatingModal';
+import fallbackimage from '../../../assets/images/no-photo.svg';
 
 function formatTime(mins: number) {
   const hs = Math.floor(mins / 60);
@@ -41,7 +42,7 @@ function MovieDetailsCard({
 }: MovieDetailsCardProps) {
   const theme = useMantineTheme();
 
-  const [ratedMovies, setRatedMovies] = useLocalStorage<RatedMovie[]>({
+  const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
@@ -56,7 +57,7 @@ function MovieDetailsCard({
         <Box w={250}>
           <Image
             src={`https://image.tmdb.org/t/p/original${poster_path}`}
-            fallbackSrc="src/assets/images/no-photo.svg"
+            fallbackSrc={fallbackimage}
             w={250}
           />
         </Box>
@@ -102,7 +103,13 @@ function MovieDetailsCard({
             </Stack>
           </Group>
         </Stack>
-        <Group className={classes.star_container} onClick={(e) => {e.stopPropagation(); open()}}>
+        <Group
+          className={classes.star_container}
+          onClick={(e) => {
+            e.stopPropagation();
+            open();
+          }}
+        >
           <Star color={movie ? theme.colors.purple[5] : theme.colors.grey[3]} />
           {movie && <Text fw={600}>{movie.rating}</Text>}
         </Group>

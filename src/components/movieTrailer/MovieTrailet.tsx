@@ -5,9 +5,7 @@ interface MovieTrailerProps {
   trailer: MovieDetailsType;
 }
 
-function MovieTrailer({
-  trailer: { id, overview, production_companies, videos },
-}: MovieTrailerProps) {
+function MovieTrailer({ trailer: { videos } }: MovieTrailerProps) {
   return (
     <Stack gap={20} p={24}>
       <video

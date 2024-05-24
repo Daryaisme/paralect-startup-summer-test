@@ -14,6 +14,7 @@ import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import classes from './MovieCard.module.css';
 import { useNavigate } from 'react-router-dom';
+import fallbackimage from '../../../assets/images/no-photo.svg';
 
 const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
@@ -55,7 +56,7 @@ function MovieCard({
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const [ratedMovies, setRatedMovies] = useLocalStorage<RatedMovie[]>({
+  const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
@@ -70,7 +71,7 @@ function MovieCard({
         <Box w={120} h={170}>
           <Image
             src={`https://image.tmdb.org/t/p/original${poster_path}`}
-            fallbackSrc="src/assets/images/no-photo.svg"
+            fallbackSrc={fallbackimage}
             w={120}
             h={170}
           />

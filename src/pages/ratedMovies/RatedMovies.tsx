@@ -15,13 +15,15 @@ import { useLocalStorage } from '@mantine/hooks';
 import { useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import classes from './RatedMovies.module.css';
+import searchIcon from '../../assets/images/search-icon.svg';
+import noData from '../../assets/images/no-rated-movies.svg';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
 
 function RatedMovies() {
   const [page, setPage] = useState(1);
 
-  const [ratedMovies, setRatedMovies] = useLocalStorage<RatedMovie[]>({
+  const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
@@ -44,16 +46,16 @@ function RatedMovies() {
       {currentMovies && movies ? (
         <Stack gap={24}>
           <Group>
-            <Title order={2} >Rated movies</Title>
-            <Input leftSection={<Image src='src/assets/images/search-isSecureContext.svg' bg='black' w={16}/>} />
+            <Title order={2}>Rated movies</Title>
+            <Input leftSection={<Image src={searchIcon} bg="black" w={16} />} />
           </Group>
           <SimpleGrid cols={2}>
             {currentMovies.map((movie) => (
               <MovieCard movie={movie} key={movie.id} />
             ))}
           </SimpleGrid>
-          <Pagination 
-            mx='auto'
+          <Pagination
+            mx="auto"
             total={Math.min(Math.ceil(movies.length / 4), 50)}
             color="purple.5"
             value={page}
@@ -67,7 +69,7 @@ function RatedMovies() {
         </Stack>
       ) : (
         <Stack align="center" gap={16}>
-          <Image src="src/assets/images/no-rated-movies.svg" w={311} />
+          <Image src={noData} w={311} />
           <Text fz={20} fw={600}>
             We don't have such movies, look for another one
           </Text>
