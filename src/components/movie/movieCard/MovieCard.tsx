@@ -14,15 +14,7 @@ import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import classes from './MovieCard.module.css';
 
-const url = 'https://api.themoviedb.org/3/genre/movie/list';
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZGMzMDhmOWNiYzkwN2FkMDkwNTQ0ODkxMThmNjllYyIsInN1YiI6IjY2NGQwMjBjZWIwNTU4ZTk2MjEzYmU5OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sQxJYsNeswFzhP9wOMamnuCYL4VeC8EnaXZGM73huH8',
-  },
-};
+const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
 interface MovieCardProps {
   movie: MovieType;
@@ -51,7 +43,7 @@ function MovieCard({
     genre_ids,
   },
 }: MovieCardProps) {
-  const { data } = useFetch<GenreDataType>(url, options);
+  const { data } = useFetch<GenreDataType>(url);
 
   const theme = useMantineTheme();
 

@@ -21,7 +21,9 @@ function RatingModal({ id, title, opened, close }: RatingModalProps) {
   const movie = ratedMovies.find((movie) => movie.id === id);
 
   function handleClickSaveButton() {
-    setRatedMovies((movies) => [...movies.filter(el => el.id != id), {id, rating}]);
+    if (rating != 0) {
+      setRatedMovies((movies) => [...movies.filter(el => el.id != id), {id, rating}]);
+    }
     close();
   }
 

@@ -9,18 +9,9 @@ import {
 import classes from './Filters.module.css';
 import { GenreDataType } from '../../types';
 import useFetch from '../../hooks/useFetch';
-import { useState } from 'react';
-import { UseFormReturnType, useForm } from '@mantine/form';
+import { UseFormReturnType } from '@mantine/form';
 
-const url = 'https://api.themoviedb.org/3/genre/movie/list';
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZGMzMDhmOWNiYzkwN2FkMDkwNTQ0ODkxMThmNjllYyIsInN1YiI6IjY2NGQwMjBjZWIwNTU4ZTk2MjEzYmU5OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sQxJYsNeswFzhP9wOMamnuCYL4VeC8EnaXZGM73huH8',
-  },
-};
+const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
 const sortings = [
   {
@@ -78,27 +69,36 @@ interface FormProps {
 }
 
 function Filters({ form }: FormProps) {
-  const { data, isLoading, isError } = useFetch<GenreDataType>(url, options);
+  const { data, isLoading, isError } = useFetch<GenreDataType>(url);
 
-  const genresData = data?.genres.map(genre => ({ value: genre.id.toString(), label: genre.name }))
+  const genresData = data?.genres.map((genre) => ({
+    value: genre.id.toString(),
+    label: genre.name,
+  }));
 
   return (
-    <Stack gap={16}>
-      <Group gap={16}>
-        <MultiSelect
-          placeholder="Select genre"
-          data={genresData}
-          classNames={{ pill: classes.option }}
-          label="Genres"
-          {...form.getInputProps('genres')}
-        />
-        <Select
-          placeholder="Select release year"
-          data={new Array(100).fill(1).map((_, i) => (2024 - i).toString())}
-          classNames={{ label: classes.label }}
-          label="Release year"
-          {...form.getInputProps('releaseYear')}
-        />
+    <Stack gap={24}>
+      <Group>
+        <Stack gap={16}>
+          <MultiSelect
+            placeholder="Select genre"
+            data={genresData}
+            classNames={{ pill: classes.pill, option: classes.option }}
+            label="Genres"
+            {...form.getInputProps('genres')}
+          />
+        </Stack>
+        <Stack gap={8}>
+          <Text size="md" fw={700}>
+            Release year
+          </Text>
+          <Select
+            placeholder="Select release year"
+            data={new Array(100).fill(1).map((_, i) => (2024 - i).toString())}
+            classNames={{ label: classes.label }}
+            {...form.getInputProps('releaseYear')}
+          />
+        </Stack>
         <Stack gap={8}>
           <Text size="md" fw={700}>
             Ratings

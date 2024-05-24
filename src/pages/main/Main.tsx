@@ -1,5 +1,4 @@
 import {
-  Center,
   Image,
   Loader,
   Pagination,
@@ -10,26 +9,16 @@ import {
 } from '@mantine/core';
 import classes from './Main.module.css';
 import useFetch from '../../hooks/useFetch';
-import { MoviesDataType, RatedMovie } from '../../types';
+import { MoviesDataType } from '../../types';
 import Filters, { FormType } from '../../components/filters/Filters';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import { useForm } from '@mantine/form';
 import { useEffect, useMemo, useState } from 'react';
-import { useLocalStorage } from '@mantine/hooks';
 
-const url =
-  'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US';
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZGMzMDhmOWNiYzkwN2FkMDkwNTQ0ODkxMThmNjllYyIsInN1YiI6IjY2NGQwMjBjZWIwNTU4ZTk2MjEzYmU5OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sQxJYsNeswFzhP9wOMamnuCYL4VeC8EnaXZGM73huH8',
-  },
-};
+const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
 
 function Main() {
-  const [activePage, setPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   const form = useForm<FormType>({
     initialValues: {
@@ -60,12 +49,9 @@ function Main() {
     if (sort) params.append('sort_by', sort);
 
     return params;
-  }, [form.values, activePage]);
+  }, [form.values, page]);
 
-  const { data, isLoading, isError } = useFetch<MoviesDataType>(
-    `${url}&page=${activePage}&${q}`,
-    options
-  );
+  const { data, isLoading, isError } = useFetch<MoviesDataType>(`${url}&page=${page}&${q}`,);
 
   useEffect(() => {
     setPage(1);
@@ -87,7 +73,7 @@ function Main() {
           <Pagination
             total={Math.min(data.total_pages, 500)}
             color="purple.5"
-            value={activePage}
+            value={page}
             onChange={setPage}
             boundaries={-1}
             classNames={{
