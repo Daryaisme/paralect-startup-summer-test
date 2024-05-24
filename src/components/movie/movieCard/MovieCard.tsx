@@ -7,19 +7,18 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { GenreDataType, MovieType, RatedMovie } from '../../../types';
+import { GenreType, MovieType, RatedMovie } from '../../../types';
 import Star from '../../star/Star';
-import useFetch from '../../../hooks/useFetch';
 import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import classes from './MovieCard.module.css';
 import { useNavigate } from 'react-router-dom';
 import fallbackimage from '../../../assets/images/no-photo.svg';
 
-const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
 interface MovieCardProps {
   movie: MovieType;
+  genres: GenreType[];
 }
 
 export function formatVotesCount(num: number) {
@@ -44,12 +43,12 @@ function MovieCard({
     vote_count,
     genre_ids,
   },
+  genres
 }: MovieCardProps) {
-  const { data } = useFetch<GenreDataType>(url);
 
   const theme = useMantineTheme();
 
-  const genresText = data?.genres
+  const genresText = genres
     .filter((genre) => genre_ids.includes(genre.id))
     .map(({ name }) => name)
     .join(', ');

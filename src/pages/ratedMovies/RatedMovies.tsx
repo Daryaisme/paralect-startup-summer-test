@@ -10,7 +10,7 @@ import {
   Title,
 } from '@mantine/core';
 import useFetch from '../../hooks/useFetch';
-import { MoviesDataType, RatedMovie } from '../../types';
+import { GenreDataType, MoviesDataType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
 import { useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
@@ -19,6 +19,8 @@ import searchIcon from '../../assets/images/search-icon.svg';
 import noData from '../../assets/images/no-rated-movies.svg';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
+const url2 = `${import.meta.env.VITE_URL}/genre/movie/list`;
+
 
 function RatedMovies() {
   const [page, setPage] = useState(1);
@@ -29,6 +31,9 @@ function RatedMovies() {
   });
 
   const { data, isLoading, isError } = useFetch<MoviesDataType>(url);
+
+  const { data: genres } = useFetch<GenreDataType>(url2);
+
 
   const movies = data?.results.filter((movie) =>
     ratedMovies.find(({ id }) => id === movie.id)
@@ -51,7 +56,7 @@ function RatedMovies() {
           </Group>
           <SimpleGrid cols={2}>
             {currentMovies.map((movie) => (
-              <MovieCard movie={movie} key={movie.id} />
+              <MovieCard movie={movie} key={movie.id} genres={genres?.genres ?? []}/>
             ))}
           </SimpleGrid>
           <Pagination

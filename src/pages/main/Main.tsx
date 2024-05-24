@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import classes from './Main.module.css';
 import useFetch from '../../hooks/useFetch';
-import { MoviesDataType } from '../../types';
+import { GenreDataType, MoviesDataType } from '../../types';
 import Filters, { FormType } from '../../components/filters/Filters';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import { useForm } from '@mantine/form';
@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from 'react';
 import noMovies from '../../assets/images/no-movies.svg';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
+const url2 = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
 function Main() {
   const [page, setPage] = useState(1);
@@ -55,6 +56,7 @@ function Main() {
   const { data, isLoading, isError } = useFetch<MoviesDataType>(
     `${url}&page=${page}&${q}`
   );
+  const { data: genres } = useFetch<GenreDataType>(url2);
 
   useEffect(() => {
     setPage(1);
@@ -70,7 +72,7 @@ function Main() {
         <>
           <SimpleGrid cols={2}>
             {data?.results.map((movie) => (
-              <MovieCard movie={movie} key={movie.id} />
+              <MovieCard movie={movie} key={movie.id} genres={genres?.genres ?? []}/>
             ))}
           </SimpleGrid>
           <Pagination
