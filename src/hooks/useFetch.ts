@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-const useFetch = <T>(url: string, options: RequestInit = {}) => {
+const useFetch = <T>(url: string) => {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    fetch(url, options)
+    fetch(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error('HTTP error');
@@ -22,7 +22,7 @@ const useFetch = <T>(url: string, options: RequestInit = {}) => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [url, options]);
+  }, [url]);
 
   return {data, isLoading, isError};
 };
