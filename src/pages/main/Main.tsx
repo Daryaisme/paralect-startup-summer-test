@@ -14,6 +14,7 @@ import Filters, { FormType } from '../../components/filters/Filters';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import { useForm } from '@mantine/form';
 import { useEffect, useMemo, useState } from 'react';
+import noMovies from '../../assets/images/no-movies.svg';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
 
@@ -51,7 +52,9 @@ function Main() {
     return params;
   }, [form.values, page]);
 
-  const { data, isLoading, isError } = useFetch<MoviesDataType>(`${url}&page=${page}&${q}`);
+  const { data, isLoading, isError } = useFetch<MoviesDataType>(
+    `${url}&page=${page}&${q}`
+  );
 
   useEffect(() => {
     setPage(1);
@@ -83,8 +86,8 @@ function Main() {
           />
         </>
       ) : (
-        <Stack align='center' gap={16}>
-          <Image src="src/assets/images/no-movies.svg" w={311} />
+        <Stack align="center" gap={16}>
+          <Image src={noMovies} w={311} />
           <Text fz={20} fw={600}>
             We don't have such movies, look for another one
           </Text>

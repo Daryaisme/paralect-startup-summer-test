@@ -69,7 +69,7 @@ interface FormProps {
 }
 
 function Filters({ form }: FormProps) {
-  const { data, isLoading, isError } = useFetch<GenreDataType>(url);
+  const { data } = useFetch<GenreDataType>(url);
 
   const genresData = data?.genres.map((genre) => ({
     value: genre.id.toString(),

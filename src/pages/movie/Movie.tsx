@@ -9,7 +9,7 @@ function MoviePage() {
   let { id } = useParams();
   const url = `${import.meta.env.VITE_URL}/movie/${id}?append_to_response=videos`;
 
-  const { data, isLoading, isError } = useFetch<MovieDetailsType>(url);
+  const { data } = useFetch<MovieDetailsType>(url);
 
   return (
     <Box pt={40}>
