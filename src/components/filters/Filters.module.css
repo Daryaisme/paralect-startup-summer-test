@@ -1,0 +1,10 @@
+.multiselect {
+  border-radius: 8px;
+  border: 1px solid var(--mantine-color-grey-3);
+  background: var(--mantine-color-white);
+  display: flex;
+  /* padding: 8px 12px; */
+  justify-content: space-between;
+  align-items: center;
+  height: 34.4px;
+}
