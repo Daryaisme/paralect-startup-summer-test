@@ -5,7 +5,7 @@ import classes from './Layout.module.css';
 import { linkType } from './types';
 
 const navLinks: linkType[] = [
-  { path: '/', label: 'Movies' },
+  { path: '/movies', label: 'Movies' },
   { path: '/rated', label: 'Rated movies' },
 ];
 

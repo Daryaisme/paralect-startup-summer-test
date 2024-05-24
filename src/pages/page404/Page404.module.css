@@ -1,0 +1,12 @@
+.container {
+  position: relative;
+  flex-direction: column;
+  gap: 48px;
+  background-color: var(--mantine-color-grey-1);
+  min-height: 100vh;
+}
+.logo_container {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}

@@ -51,7 +51,7 @@ function Main() {
     return params;
   }, [form.values, page]);
 
-  const { data, isLoading, isError } = useFetch<MoviesDataType>(`${url}&page=${page}&${q}`,);
+  const { data, isLoading, isError } = useFetch<MoviesDataType>(`${url}&page=${page}&${q}`);
 
   useEffect(() => {
     setPage(1);

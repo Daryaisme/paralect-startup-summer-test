@@ -33,7 +33,7 @@ function RatingModal({ id, title, opened, close }: RatingModalProps) {
   }
 
   return (
-    <Modal opened={opened} onClose={close} title="Your rating" centered>
+    <Modal opened={opened} onClose={close} onClick={(e) => e.stopPropagation()} title="Your rating" centered>
       <Text fz={16} fw={700}>{title}</Text>
       <Rating count={10} value={movie ? movie.rating : rating} onChange={setRating} />
       <Group>

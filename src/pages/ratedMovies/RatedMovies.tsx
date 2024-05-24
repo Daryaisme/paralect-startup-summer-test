@@ -41,7 +41,7 @@ function RatedMovies() {
   if (isError) return 'error';
   return (
     <>
-      {currentMovies ? (
+      {currentMovies && movies ? (
         <Stack gap={24}>
           <Group>
             <Title order={2} >Rated movies</Title>
@@ -54,7 +54,7 @@ function RatedMovies() {
           </SimpleGrid>
           <Pagination 
             mx='auto'
-            total={Math.min(Math.ceil(movies?.length || 1 / 4), 50)}
+            total={Math.min(Math.ceil(movies.length / 4), 50)}
             color="purple.5"
             value={page}
             onChange={setPage}

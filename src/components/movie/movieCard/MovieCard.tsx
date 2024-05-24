@@ -13,6 +13,7 @@ import useFetch from '../../../hooks/useFetch';
 import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import classes from './MovieCard.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
@@ -20,7 +21,7 @@ interface MovieCardProps {
   movie: MovieType;
 }
 
-function formatVotesCount(num: number) {
+export function formatVotesCount(num: number) {
   const suffixes = ['', 'K', 'M'];
 
   let c = 0;
@@ -61,8 +62,10 @@ function MovieCard({
 
   const movie = ratedMovies.find((movie) => movie.id === id);
 
+  const navigate = useNavigate();
+
   return (
-    <Box key={id} p={24} bg="white" fz="md">
+    <Box key={id} className={classes.movie_container} onClick={() => navigate(`/movies/${id}`)}>
       <Group align="stretch" gap={16} wrap="nowrap">
         <Box w={120} h={170}>
           <Image
@@ -91,14 +94,14 @@ function MovieCard({
               >{`(${formatVotesCount(vote_count)})`}</Box>
             </Group>
           </Stack>
-          <Group gap={8} c="grey.6" fw={400}>
-            Genres
-            <Text c="black">{genresText}</Text>
+          <Group className={classes.text} gap={8} fw={400}>
+            <Text c="grey.6">Genres</Text>
+            <Text className={classes.text_clipped}>{genresText}</Text>
           </Group>
         </Stack>
-        <Group className={classes.star_container} onClick={open} gap={4}>
+        <Group className={classes.star_container} onClick={(e) => {e.stopPropagation(); open()}} gap={4}>
           <Star color={movie ? theme.colors.purple[5] : theme.colors.grey[3]} />
-          {movie && <Text>{movie.rating}</Text>}
+          {movie && <Text fw={600}>{movie.rating}</Text>}
         </Group>
       </Group>
       <RatingModal

@@ -1,0 +1,6 @@
+.pagination_container {
+  align-self: flex-end;
+} 
+.pagination_dots {
+  display: none;
+}

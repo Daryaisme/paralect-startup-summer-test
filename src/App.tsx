@@ -1,6 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Main from './pages/main/Main';
 import MoviePage from './pages/movie/Movie';
@@ -13,9 +13,10 @@ function App() {
     <MantineProvider theme={theme}>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={<Main />} />
-          <Route path='movies/:id' element={<MoviePage />} />
-          <Route path='rated' element={<RatedMovies />} />
+          <Route index element={<Navigate to='/movies' replace />} />
+          <Route path='/movies' element={<Main />} />
+          <Route path='/movies/:id' element={<MoviePage />} />
+          <Route path='/rated' element={<RatedMovies />} />
         </Route>
         <Route path='*' element={<Page404 />} />
       </Routes>
