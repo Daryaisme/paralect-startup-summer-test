@@ -1,11 +1,9 @@
 import {
   Anchor,
   Avatar,
-  Box,
   Breadcrumbs,
   Divider,
   Group,
-  Image,
   Loader,
   Stack,
   Text,

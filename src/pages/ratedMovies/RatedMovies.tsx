@@ -11,7 +11,7 @@ import {
   Title,
 } from '@mantine/core';
 import useFetch from '../../hooks/useFetch';
-import { GenreDataType, MovieType, MoviesDataType, RatedMovie } from '../../types';
+import { GenreDataType, MoviesDataType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
 import { useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
@@ -21,7 +21,7 @@ import noData from '../../assets/images/no-rated-movies.svg';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
 const url2 = `${import.meta.env.VITE_URL}/genre/movie/list`;
-const url3 = `${import.meta.env.VITE_URL}/movie`;
+// const url3 = `${import.meta.env.VITE_URL}/movie`;
 
 function RatedMovies() {
   const [page, setPage] = useState(1);
