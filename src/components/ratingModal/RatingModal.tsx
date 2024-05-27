@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Group,
   Modal,
   Rating,
