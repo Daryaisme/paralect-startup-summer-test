@@ -15,7 +15,6 @@ import classes from './MovieCard.module.css';
 import { useNavigate } from 'react-router-dom';
 import fallbackimage from '../../../assets/images/no-photo.svg';
 
-
 interface MovieCardProps {
   movie: MovieType;
   genres: GenreType[];
@@ -43,9 +42,8 @@ function MovieCard({
     vote_count,
     genre_ids,
   },
-  genres
+  genres,
 }: MovieCardProps) {
-
   const theme = useMantineTheme();
 
   const genresText = genres
@@ -65,7 +63,10 @@ function MovieCard({
   const navigate = useNavigate();
 
   return (
-    <Box key={id} className={classes.movie_container} onClick={() => navigate(`/movies/${id}`)}>
+    <Box
+      className={classes.movie_container}
+      onClick={() => navigate(`/movies/${id}`)}
+    >
       <Group align="stretch" gap={16} wrap="nowrap">
         <Box w={120} h={170}>
           <Image
@@ -75,34 +76,45 @@ function MovieCard({
             h={170}
           />
         </Box>
-        <Stack justify="space-between" w="100%">
-          <Stack gap={8}>
-            <Title order={3} c="purple.5">
-              {original_title}
-            </Title>
-            <Text size="md" c="grey.6" lh="20px">
-              {new Date(release_date).getFullYear() || 'no date'}
-            </Text>
-            <Group gap={8} fw={600} fz="md">
-              <Group gap={4}>
-                <Star color={theme.colors.yellow[1]} />
-                {Math.round(vote_average * 10) / 10}
+        <Stack justify="space-between" w='calc(100% - 120px - 16px)'>
+          <Group justify="space-between" wrap="nowrap">
+            <Stack gap={8}>
+              <Title order={3} c="purple.5" lineClamp={2}>
+                {original_title}
+              </Title>
+              <Text size="md" c="grey.6" lh="20px">
+                {new Date(release_date).getFullYear() || 'no date'}
+              </Text>
+              <Group gap={8} fw={600} fz="md">
+                <Group gap={4}>
+                  <Star color={theme.colors.yellow[1]} />
+                  {Math.round(vote_average * 10) / 10}
+                </Group>
+                <Box
+                  c="grey.6"
+                  fw={400}
+                >{`(${formatVotesCount(vote_count)})`}</Box>
               </Group>
-              <Box
-                c="grey.6"
-                fw={400}
-              >{`(${formatVotesCount(vote_count)})`}</Box>
+            </Stack>
+            <Group
+              className={classes.star_container}
+              onClick={(e) => {
+                e.stopPropagation();
+                open();
+              }}
+              gap={4}
+            >
+              <Star
+                color={movie ? theme.colors.purple[5] : theme.colors.grey[3]}
+              />
+              {movie && <Text fw={600}>{movie.rating}</Text>}
             </Group>
-          </Stack>
-          <Group className={classes.text} gap={8} fw={400}>
+          </Group>
+          <Group gap={8} fw={400} wrap="nowrap">
             <Text c="grey.6">Genres</Text>
-            <Text className={classes.text_clipped}>{genresText}</Text>
+            <Text className={classes.text_clipped} lineClamp={1}>{genresText}</Text>
           </Group>
         </Stack>
-        <Group className={classes.star_container} onClick={(e) => {e.stopPropagation(); open()}} gap={4}>
-          <Star color={movie ? theme.colors.purple[5] : theme.colors.grey[3]} />
-          {movie && <Text fw={600}>{movie.rating}</Text>}
-        </Group>
       </Group>
       <RatingModal
         id={id}

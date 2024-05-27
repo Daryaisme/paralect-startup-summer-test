@@ -4,6 +4,7 @@ export interface GenreType {
 }
 
 interface ProductionCompanyType {
+  // [x: string]: any;
   id: number;
   logo_path: string | null;
   name: string;
@@ -45,7 +46,7 @@ export interface MovieDetailsType {
   revenue: number;
   genres: GenreType[];
   overview: string;
-  production_companies: ProductionCompanyType;
+  production_companies: ProductionCompanyType[];
   videos: { results: VideoType[] };
 }
 

@@ -1,7 +1,16 @@
-import { Button, Group, Modal, Rating, Text } from '@mantine/core';
+import {
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Rating,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { RatedMovie } from '../../types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import classes from './RatingModal.module.css';
 
 interface RatingModalProps {
   id: number;
@@ -11,14 +20,17 @@ interface RatingModalProps {
 }
 
 function RatingModal({ id, title, opened, close }: RatingModalProps) {
-  const [rating, setRating] = useState(0);
-
   const [ratedMovies, setRatedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
 
   const movie = ratedMovies.find((movie) => movie.id === id);
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    setRating(movie?.rating ?? 0);
+  }, [movie, opened]);
 
   function handleClickSaveButton() {
     if (rating != 0) {
@@ -42,23 +54,33 @@ function RatingModal({ id, title, opened, close }: RatingModalProps) {
       onClick={(e) => e.stopPropagation()}
       title="Your rating"
       centered
+      classNames={{
+        header: classes.modal_header,
+        content: classes.modal_content,
+      }}
     >
-      <Text fz={16} fw={700}>
-        {title}
-      </Text>
-      <Rating
-        count={10}
-        value={movie ? movie.rating : rating}
-        onChange={setRating}
-      />
-      <Group>
-        <Button variant="filled" onClick={handleClickSaveButton}>
-          Save
-        </Button>
-        <Button variant="subtle" onClick={handleClickRemoveButton}>
-          Remove rating
-        </Button>
-      </Group>
+      <Stack gap={16}>
+        <Text fz={16} fw={700}>
+          {title}
+        </Text>
+        <Rating count={10} value={rating} onChange={setRating} />
+        <Group>
+          <Button
+            variant="filled"
+            bg="purple.5"
+            onClick={handleClickSaveButton}
+          >
+            Save
+          </Button>
+          <Button
+            variant="subtle"
+            c="purple.5"
+            onClick={handleClickRemoveButton}
+          >
+            Remove rating
+          </Button>
+        </Group>
+      </Stack>
     </Modal>
   );
 }

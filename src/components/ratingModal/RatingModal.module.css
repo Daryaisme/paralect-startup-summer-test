@@ -1,0 +1,7 @@
+.modal_header {
+  border-bottom: 1px var(--mantine-color-grey-2) solid;
+  margin-bottom: 16px;
+}
+.modal_content {
+  border-radius: 8px;
+}

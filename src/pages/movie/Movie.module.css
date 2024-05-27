@@ -1,0 +1,20 @@
+.breadcrumbs a {
+  color: var(--mantine-color-purple-5);
+}
+.trailer_container {
+  border-radius: 12px;
+  background: var(--mantine-color-white);
+  padding: 24px;
+  gap: 20px;
+}
+.video {
+  max-width: 500px;
+  height: 281px;
+  border-radius: 9px;
+}
+.avatar_root {
+  border: 0.5px #F1F1F1 solid;
+}
+.avatar_image {
+  object-fit: contain;
+}
