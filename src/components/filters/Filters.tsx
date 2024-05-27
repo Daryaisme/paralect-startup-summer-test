@@ -78,7 +78,7 @@ function Filters({ form }: FormProps) {
 
   return (
     <Stack gap={24}>
-      <Group>
+      <Group wrap='nowrap'>
         <Stack gap={16}>
           <MultiSelect
             placeholder="Select genre"
@@ -103,7 +103,7 @@ function Filters({ form }: FormProps) {
           <Text size="md" fw={700}>
             Ratings
           </Text>
-          <Group>
+          <Group wrap='nowrap'>
             <NumberInput
               placeholder="From"
               min={0}

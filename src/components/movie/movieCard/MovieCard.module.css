@@ -8,9 +8,3 @@
   padding: 24px;
   font-size: 16px;
 }
-.text {
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
-  color: var(--mantine-color-black);
-}
