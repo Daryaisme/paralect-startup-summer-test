@@ -40,16 +40,14 @@ function MovieCard({
     release_date,
     vote_average,
     vote_count,
-    genre_ids,
   },
-  genres,
 }: MovieCardProps) {
   const theme = useMantineTheme();
 
-  const genresText = genres
-    .filter((genre) => genre_ids.includes(genre.id))
-    .map(({ name }) => name)
-    .join(', ');
+  // const genresText = genres
+  //   .filter((genre) => genre_ids.includes(genre.id))
+  //   .map(({ name }) => name)
+  //   .join(', ');
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -112,7 +110,7 @@ function MovieCard({
           </Group>
           <Group gap={8} fw={400} wrap="nowrap">
             <Text c="grey.6">Genres</Text>
-            <Text className={classes.text_clipped} lineClamp={1}>{genresText}</Text>
+            {/* <Text className={classes.text_clipped} lineClamp={1}>{genresText}</Text> */}
           </Group>
         </Stack>
       </Group>

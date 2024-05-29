@@ -4,3 +4,9 @@
 .pagination_dots {
   display: none;
 }
+.search_section[data-position="right"] {
+  width: fit-content;
+}
+.search_section[data-position="right"] button {
+  width: 88px;
+}
