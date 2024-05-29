@@ -6,6 +6,7 @@ import noData from '../../assets/images/404.svg';
 
 function Page404() {
   const navigate = useNavigate();
+  
   return (
     <Center className={classes.container}>
       <Box className={classes.logo_container}>
