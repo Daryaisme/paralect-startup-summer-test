@@ -2,81 +2,120 @@ import {
   Button,
   Group,
   Image,
-  Input,
   Loader,
   Pagination,
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
 } from '@mantine/core';
 import useFetch from '../../hooks/useFetch';
-import { GenreDataType, MoviesDataType, RatedMovie } from '../../types';
+import { GenreDataType, MovieType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import classes from './RatedMovies.module.css';
 import searchIcon from '../../assets/images/search-icon.svg';
 import noData from '../../assets/images/no-rated-movies.svg';
+import useMoviesQuery from '../../hooks/useMoviesQuery';
 
-const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
-const url2 = `${import.meta.env.VITE_URL}/genre/movie/list`;
-// const url3 = `${import.meta.env.VITE_URL}/movie`;
+const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
 function RatedMovies() {
   const [page, setPage] = useState(1);
+  const [title, setTitle] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  console.log(title);
 
   const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
 
-  const { data, isLoading, isError } = useFetch<MoviesDataType>(url);
-
-  const { data: genres } = useFetch<GenreDataType>(url2);
-
-  const movies = data?.results.filter((movie) =>
-    ratedMovies.find(({ id }) => id === movie.id)
+  const urls = useMemo(
+    () =>
+      ratedMovies.map(({ id }) => `${import.meta.env.VITE_URL}/movie/${id}`),
+    [ratedMovies]
   );
-  const currentMovies = movies?.slice((page - 1) * 4, (page - 1) * 4 + 4);
+  const {
+    data: movies,
+    isLoading,
+    isError,
+  } = urls
+    ? useMoviesQuery<MovieType>(urls)
+    : { data: null, isLoading: true, isError: true };
 
-  // let movies: MovieType[] = [];
-  // ratedMovies.map(({ id }) => {
-  //   const { data: movie } = useFetch<MovieType>(`${url3}/${id}`);
-  //   if (movie) movies.push(movie);
-  // });
+  const { data: genres } = useFetch<GenreDataType>(url);
 
-  // useEffect(() => {
-  //   setPage(1);
-  // }, []);
+  const filteredMovies = useMemo(
+    () => movies?.filter((movie) => movie.original_title.includes(title)),
+    [movies, title]
+  );
+
+  let currentMovies = filteredMovies?.slice((page - 1) * 4, (page - 1) * 4 + 4);
+
+  function handleClickSearchButton() {
+    setPage(1);
+    setTitle(inputRef.current?.value || '');
+  }
+
+  useEffect(() => {
+    setPage(1);
+  }, []);
 
   if (isLoading) return <Loader />;
   if (isError) return 'error';
   return (
     <>
-      {currentMovies && movies ? (
+      {movies ? (
         <Stack gap={24}>
           <Group>
             <Title order={2}>Rated movies</Title>
-            <Input leftSection={<Image src={searchIcon} bg="black" w={16} />} rightSection={<Button />} />
+            <TextInput
+              ref={inputRef}
+              leftSection={<Image src={searchIcon} w={16} />}
+              rightSection={
+                <Button
+                  onClick={handleClickSearchButton}
+                  variant="filled"
+                  py={8}
+                  px={12}
+                  bg="purple.5"
+                >
+                  Search
+                </Button>
+              }
+              classNames={{
+                section: classes.search_section,
+                input: classes.search_input,
+              }}
+            />
           </Group>
           <SimpleGrid cols={2}>
-            {currentMovies.map((movie) => (
-              <MovieCard movie={movie} key={movie.id} genres={genres?.genres ?? []}/>
+            {currentMovies?.map((movie) => (
+              <MovieCard
+                movie={movie}
+                key={movie.id}
+                genres={genres?.genres ?? []}
+              />
             ))}
           </SimpleGrid>
-          <Pagination
-            mx="auto"
-            total={Math.min(Math.ceil(movies.length / 4), 50)}
-            color="purple.5"
-            value={page}
-            onChange={setPage}
-            boundaries={-1}
-            classNames={{
-              root: classes.pagination_container,
-              dots: classes.pagination_dots,
-            }}
-          />
+          {filteredMovies && filteredMovies.length > 4 && (
+            <Pagination
+              mx="auto"
+              total={Math.min(Math.ceil(movies.length / 4), 50)}
+              color="purple.5"
+              value={page}
+              onChange={setPage}
+              boundaries={-1}
+              classNames={{
+                root: classes.pagination_container,
+                dots: classes.pagination_dots,
+              }}
+            />
+          )}
         </Stack>
       ) : (
         <Stack align="center" gap={16}>

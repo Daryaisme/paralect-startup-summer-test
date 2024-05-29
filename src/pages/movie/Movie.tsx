@@ -18,7 +18,7 @@ function MoviePage() {
   let { id } = useParams();
   const url = `${import.meta.env.VITE_URL}/movie/${id}?append_to_response=videos`;
 
-  const { data, isLoading, isError } = useFetch<MovieDetailsType>(url);
+  const { data , isLoading, isError } = useFetch<MovieDetailsType>(url);
 
   const items = [
     { title: 'Movies', href: '/movies' },
@@ -28,8 +28,6 @@ function MoviePage() {
       {item.title}
     </Anchor>
   ));
-
-  console.log(data?.production_companies);
 
   if (isLoading) <Loader />
   if (isError) <>error</>
