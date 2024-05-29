@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Group,
   Image,
   Loader,
@@ -13,12 +14,13 @@ import {
 import useFetch from '../../hooks/useFetch';
 import { GenreDataType, MovieType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
 import classes from './RatedMovies.module.css';
 import searchIcon from '../../assets/images/search-icon.svg';
 import noData from '../../assets/images/no-rated-movies.svg';
 import useMoviesQuery from '../../hooks/useMoviesQuery';
+import { useNavigate } from 'react-router-dom';
 
 const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
 
@@ -61,15 +63,13 @@ function RatedMovies() {
     setTitle(inputRef.current?.value || '');
   }
 
-  useEffect(() => {
-    setPage(1);
-  }, []);
+  const navigate = useNavigate();
 
   if (isLoading) return <Loader />;
   if (isError) return 'error';
   return (
     <>
-      {movies ? (
+      {movies?.length ? (
         <Stack gap={24}>
           <Group>
             <Title order={2}>Rated movies</Title>
@@ -118,12 +118,23 @@ function RatedMovies() {
           )}
         </Stack>
       ) : (
-        <Stack align="center" gap={16}>
-          <Image src={noData} w={311} />
-          <Text fz={20} fw={600}>
-            We don't have such movies, look for another one
-          </Text>
-        </Stack>
+        <Center mih='calc(100vh - 40px - 82px)'>
+          <Stack align="center" gap={16}>
+            <Image src={noData} w={311} />
+            <Text fz={20} fw={600}>
+              We don't have such movies, look for another one
+            </Text>
+            <Button
+          color="purple.5"
+          px={20}
+          py={10}
+          variant="filled"
+          onClick={() => navigate('/')}
+        >
+          Go Home
+        </Button>
+          </Stack>
+        </Center>
       )}
     </>
   );
