@@ -1,0 +1,20 @@
+.input {
+  border-radius: 8px;
+  padding: 9px 12px;
+  border: var(--mantine-color-grey-3) 1px solid;
+
+  &::placeholder {
+    color: var(--mantine-color-grey-5);
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: var(--mantine-color-purple-5);
+  }
+}
+
+.label {
+  font-weight: 700;
+  margin-bottom: 5px;
+}

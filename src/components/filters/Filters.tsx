@@ -4,129 +4,82 @@ import {
   NumberInput,
   Select,
   Stack,
-  Text,
+  Button,
 } from '@mantine/core';
-import classes from './Filters.module.css';
-import { GenreDataType } from '../../types';
-import useFetch from '../../hooks/useFetch';
+
 import { UseFormReturnType } from '@mantine/form';
+import { genreApi } from '../../resources/genre';
+import classes from './index.module.css';
+import { SORTINGS } from './constants';
 
-const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
-
-const sortings = [
-  {
-    value: 'popularity.desc',
-    label: 'Most popular',
-  },
-  {
-    value: 'popularity.asc',
-    label: 'Least popular',
-  },
-  {
-    value: 'vote_average.desc',
-    label: 'Most rated',
-  },
-  {
-    value: 'vote_average.asc',
-    label: 'Least rated',
-  },
-  {
-    value: 'vote_count.desc',
-    label: 'Most voted',
-  },
-  {
-    value: 'vote_count.asc',
-    label: 'Least voted',
-  },
-  {
-    value: 'original_title.asc',
-    label: 'Title (A-Z)',
-  },
-  {
-    value: 'original_title.desc',
-    label: 'Title (Z-A)',
-  },
-  {
-    value: 'revenue.desc',
-    label: 'Top grossing',
-  },
-  {
-    value: 'revenue.asc',
-    label: 'Lowest grossing',
-  },
-];
-
-export interface FormType {
+export type FormType = {
   genres: string[];
   releaseYear: string;
   ratingFrom: number;
   ratingTo: number;
   sortMethod: string;
-}
+};
 
 interface FormProps {
   form: UseFormReturnType<FormType>;
 }
 
 function Filters({ form }: FormProps) {
-  const { data } = useFetch<GenreDataType>(url);
+  const { data: genres } = genreApi.useList();
 
-  const genresData = data?.genres.map((genre) => ({
+  const genresData = genres?.genres.map((genre) => ({
     value: genre.id.toString(),
     label: genre.name,
   }));
 
   return (
     <Stack gap={24}>
-      <Group wrap='nowrap'>
-        <Stack gap={16}>
-          <MultiSelect
-            placeholder="Select genre"
-            data={genresData}
-            classNames={{ pill: classes.pill, option: classes.option }}
-            label="Genres"
-            {...form.getInputProps('genres')}
+      <Group wrap="nowrap">
+        <MultiSelect
+          label="Genre"
+          placeholder="Select genre"
+          data={genresData}
+          searchable
+          {...form.getInputProps('genres')}
+        />
+
+        <Select
+          label="Release year"
+          placeholder="Select release year"
+          data={new Array(100).fill(1).map((_, i) => (2024 - i).toString())}
+          {...form.getInputProps('releaseYear')}
+        />
+
+        <Group wrap="nowrap" align="flex-end">
+          <NumberInput
+            label="Rating"
+            placeholder="From"
+            min={0}
+            max={10}
+            clampBehavior="strict"
+            {...form.getInputProps('ratingFrom')}
           />
-        </Stack>
-        <Stack gap={8}>
-          <Text size="md" fw={700}>
-            Release year
-          </Text>
-          <Select
-            placeholder="Select release year"
-            data={new Array(100).fill(1).map((_, i) => (2024 - i).toString())}
-            classNames={{ label: classes.label }}
-            {...form.getInputProps('releaseYear')}
+
+          <NumberInput
+            placeholder="To"
+            min={0}
+            max={10}
+            clampBehavior="strict"
+            {...form.getInputProps('ratingTo')}
           />
-        </Stack>
-        <Stack gap={8}>
-          <Text size="md" fw={700}>
-            Ratings
-          </Text>
-          <Group wrap='nowrap'>
-            <NumberInput
-              placeholder="From"
-              min={0}
-              max={10}
-              clampBehavior="strict"
-              {...form.getInputProps('ratingFrom')}
-            />
-            <NumberInput
-              placeholder="To"
-              min={0}
-              max={10}
-              clampBehavior="strict"
-              {...form.getInputProps('ratingTo')}
-            />
-          </Group>
-        </Stack>
-        <Text size="14px">Reset filters</Text>
+        </Group>
+
+        <Button variant="text" onClick={form.reset}>
+          Reset filters
+        </Button>
       </Group>
+
       <Select
-        placeholder="Select release year"
-        data={sortings}
-        classNames={{ label: classes.label }}
-        label="Release year"
+        label="Sort by"
+        placeholder="Select kind of sort"
+        data={SORTINGS}
+        w="fit-content"
+        className={classes.sortSelect}
         {...form.getInputProps('sortMethod')}
       />
     </Stack>

@@ -1,4 +1,5 @@
-.loadingWrapper {
+.loadingWrapper,
+.errorWrapper {
   flex-grow: 1;
 }
 

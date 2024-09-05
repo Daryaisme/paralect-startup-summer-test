@@ -1,8 +1,11 @@
-import { colorsTuple, createTheme } from "@mantine/core";
+import { colorsTuple, createTheme } from '@mantine/core';
+
+import * as components from './components';
 
 const theme = createTheme({
+  components,
   colors: {
-    'grey': [
+    grey: [
       '#F5F5F6',
       '#F5F5F6',
       '#EAEBED',
@@ -14,7 +17,7 @@ const theme = createTheme({
       '#7B7C88',
       '#7B7C88',
     ],
-    'purple': [
+    purple: [
       '#F2EBF9',
       '#F2EBF9',
       '#E5D5FA',
@@ -26,7 +29,7 @@ const theme = createTheme({
       '#541F9D',
       '#541F9D',
     ],
-    'yellow': colorsTuple('#FAB005'),
+    yellow: colorsTuple('#FAB005'),
   },
   fontFamily: 'Inter, sans-serif',
   headings: {
@@ -42,7 +45,7 @@ const theme = createTheme({
       h3: {
         fontSize: '20px',
         fontWeight: '600',
-      }
+      },
     },
   },
 });

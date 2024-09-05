@@ -6,7 +6,7 @@ import Main from './pages/main/Main';
 import MoviePage from './pages/movie/Movie';
 import RatedMovies from './pages/ratedMovies/RatedMovies';
 import Page404 from './pages/page404/Page404';
-import theme from './theme';
+import theme from './theme/theme';
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './query-client';
 

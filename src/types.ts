@@ -55,7 +55,7 @@ export interface MoviesDataType {
   total_pages: number;
 }
 
-export interface GenreDataType {
+export interface GenresDataType {
   genres: GenreType[];
 }
 

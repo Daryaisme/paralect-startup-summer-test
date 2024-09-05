@@ -12,7 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import useFetch from '../../hooks/useFetch';
-import { GenreDataType, MovieType, RatedMovie } from '../../types';
+import { GenresDataType, MovieType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
 import { useMemo, useRef, useState } from 'react';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
@@ -48,7 +48,7 @@ function RatedMovies() {
     ? useMoviesQuery<MovieType>(urls)
     : { data: null, isLoading: true, isError: true };
 
-  const { data: genres } = useFetch<GenreDataType>(url);
+  const { data: genres } = useFetch<GenresDataType>(url);
 
   const filteredMovies = useMemo(
     () => movies?.filter((movie) => movie.original_title.includes(title)),

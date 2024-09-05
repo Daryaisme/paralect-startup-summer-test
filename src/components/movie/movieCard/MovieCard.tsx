@@ -7,7 +7,7 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { GenreDataType, GenreType, MovieType, RatedMovie } from '../../../types';
+import { GenreType, MovieType, RatedMovie } from '../../../types';
 import Star from '../../star/Star';
 import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';

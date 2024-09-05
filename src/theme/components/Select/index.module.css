@@ -1,0 +1,46 @@
+.input {
+  border-radius: 8px;
+  padding: 9px 12px;
+  border: var(--mantine-color-grey-3) 1px solid;
+  background-color: var(--mantine-color-white);
+
+  &::placeholder {
+    color: var(--mantine-color-grey-5);
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: var(--mantine-color-purple-5);
+  }
+}
+
+.label {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.dropdown {
+  border: var(--mantine-color-white) 1px solid;
+}
+
+.option {
+  padding: 8px 12px;
+
+  &[data-checked='true'] {
+    background-color: var(--mantine-color-purple-0);
+  }
+
+  & svg path {
+    fill: var(--mantine-color-purple-5);
+  }
+}
+
+.section {
+  background-color: var(--mantine-color-white);
+  border-radius: 8px;
+
+  & svg {
+    color: var(--mantine-color-purple-5);
+  }
+}
