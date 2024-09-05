@@ -35,8 +35,8 @@ function Layout() {
           </Stack>
         </Stack>
       </AppShell.Navbar>
-      <AppShell.Main bg='grey.1'>
-        <Stack px={90} pb={82} pt={40} mih='100vh'>
+      <AppShell.Main bg="grey.1">
+        <Stack px={90} pb={80} pt={40} mih="100vh">
           <Outlet />
         </Stack>
       </AppShell.Main>

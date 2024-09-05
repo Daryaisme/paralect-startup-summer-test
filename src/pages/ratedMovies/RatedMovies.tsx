@@ -29,8 +29,6 @@ function RatedMovies() {
   const [title, setTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  console.log(title);
-
   const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
@@ -41,6 +39,7 @@ function RatedMovies() {
       ratedMovies.map(({ id }) => `${import.meta.env.VITE_URL}/movie/${id}`),
     [ratedMovies]
   );
+
   const {
     data: movies,
     isLoading,
@@ -71,9 +70,10 @@ function RatedMovies() {
     <>
       {movies?.length ? (
         <Stack gap={24}>
-          <Group>
+          <Group justify='space-between'>
             <Title order={2}>Rated movies</Title>
             <TextInput
+              className={classes.input}
               ref={inputRef}
               leftSection={<Image src={searchIcon} w={16} />}
               rightSection={
@@ -131,7 +131,7 @@ function RatedMovies() {
           variant="filled"
           onClick={() => navigate('/')}
         >
-          Go Home
+          Find movies
         </Button>
           </Stack>
         </Center>

@@ -1,4 +1,5 @@
 import {
+  Center,
   Image,
   Loader,
   Pagination,
@@ -15,6 +16,7 @@ import MovieCard from '../../components/movie/movieCard/MovieCard';
 import { useForm } from '@mantine/form';
 import { useEffect, useMemo, useState } from 'react';
 import noMovies from '../../assets/images/no-movies.svg';
+import { movieApi } from '../../resources/movie';
 
 const url = `${import.meta.env.VITE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US`;
 const url2 = `${import.meta.env.VITE_URL}/genre/movie/list`;
@@ -53,28 +55,42 @@ function Main() {
     return params;
   }, [form.values, page]);
 
-  const { data, isLoading, isError } = useFetch<MoviesDataType>(
-    `${url}&page=${page}&${q}`
-  );
+  // const { data, isLoading, isError } = useFetch<MoviesDataType>(
+  //   `${url}&page=${page}&${q}`
+  // );
+  const { data } = movieApi.useList<null>();
   const { data: genres } = useFetch<GenreDataType>(url2);
 
   useEffect(() => {
     setPage(1);
   }, [form.values]);
 
-  if (isLoading) return <Loader />;
-  if (isError) return 'error';
+  // if (isLoading)
+  //   return (
+  //     <Center className={classes.loadingWrapper}>
+  //       <Loader />
+  //     </Center>
+  //   );
+
+  // if (isError) return 'error';
+
   return (
     <Stack gap={24}>
       <Title order={2}>Movies</Title>
+
       <Filters form={form} />
       {data?.results.length ? (
         <>
           <SimpleGrid cols={2}>
             {data?.results.map((movie) => (
-              <MovieCard movie={movie} key={movie.id} genres={genres?.genres ?? []}/>
+              <MovieCard
+                movie={movie}
+                key={movie.id}
+                genres={genres?.genres ?? []}
+              />
             ))}
           </SimpleGrid>
+
           <Pagination
             total={Math.min(data.total_pages, 500)}
             color="purple.5"
@@ -82,14 +98,15 @@ function Main() {
             onChange={setPage}
             boundaries={-1}
             classNames={{
-              root: classes.pagination_container,
-              dots: classes.pagination_dots,
+              root: classes.paginationContainer,
+              dots: classes.paginationDots,
             }}
           />
         </>
       ) : (
         <Stack align="center" gap={16}>
           <Image src={noMovies} w={311} />
+
           <Text fz={20} fw={600}>
             We don't have such movies, look for another one
           </Text>

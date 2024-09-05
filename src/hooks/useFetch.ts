@@ -28,3 +28,7 @@ const useFetch = <T>(url: string) => {
 };
 
 export default useFetch;
+
+const filterArr = (arr, callback) => {
+  return arr.reduce((res, el) => callback(el) ? [...res, el] : res, []);
+}

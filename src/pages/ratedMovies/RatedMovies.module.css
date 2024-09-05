@@ -10,3 +10,6 @@
 .search_section[data-position="right"] button {
   width: 88px;
 }
+.input {
+  justify-self: end;
+}
