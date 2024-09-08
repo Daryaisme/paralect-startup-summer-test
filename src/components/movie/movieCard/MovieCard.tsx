@@ -53,7 +53,7 @@ const MovieCard: FC<MovieCardProps> = ({ movie, genres: allGenres }) => {
       ? allGenres
           .filter((genre) => movie.genre_ids.includes(genre.id))
           .map(({ name }) => name)
-      : movie.genres.map(({ name }) => name)
+      : (movie.genres || []).map(({ name }) => name)
   ).join(', ');
 
   const [ratedMovies] = useLocalStorage<RatedMovie[]>({
