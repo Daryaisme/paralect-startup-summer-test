@@ -20,7 +20,15 @@ import classes from './Main.module.css';
 const Main: FC = () => {
   const [page, setPage] = useState(1);
 
-  const form = useForm<FormType>();
+  const form = useForm<FormType>({
+    initialValues: {
+      genres: [],
+      releaseYear: '',
+      ratingFrom: NaN,
+      ratingTo: NaN,
+      sortMethod: 'popularity.desc',
+    },
+  });
 
   const queryString = useMemo(() => {
     const { genres, releaseYear, ratingFrom, ratingTo, sortMethod } =
@@ -104,6 +112,6 @@ const Main: FC = () => {
       )}
     </Stack>
   );
-}
+};
 
 export default Main;
