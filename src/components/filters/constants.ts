@@ -1,4 +1,4 @@
-export const SORTINGS = [
+export const SORTING_METHODS = [
   {
     value: 'popularity.desc',
     label: 'Most popular',

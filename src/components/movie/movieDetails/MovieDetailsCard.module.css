@@ -1,17 +1,21 @@
-.property {
-  color: var(--mantine-color-grey-6);
-  font-size: 16px;
-}
-.movie_container {
+.container {
   border-radius: 12px;
-  gap: 16px;
-  align-items: stretch;
-  background-color: var(--mantine-color-white);
-  padding: 24px;
-  flex-wrap: nowrap;
 }
-.star_container {
-  gap: 4px;
-  flex-wrap: nowrap;
-  align-self: flex-start;
+
+.tableTd {
+  padding: 6px 0;
+  font-size: 16px;
+
+  &:first-child {
+    color: var(--mantine-color-grey-6);
+  }
+}
+
+.informationContainer {
+  flex-grow: 1;
+}
+
+.imageContainer,
+.titleContainer {
+  overflow: hidden;
 }

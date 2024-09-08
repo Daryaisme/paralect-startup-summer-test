@@ -19,7 +19,7 @@ function App() {
             <Route index element={<Navigate to="/movies" replace />} />
             <Route path="/movies" element={<Main />} />
             <Route path="/movies/:id" element={<MoviePage />} />
-            <Route path="/rated" element={<RatedMovies />} />
+            <Route path="/rated-movies" element={<RatedMovies />} />
           </Route>
 
           <Route path="*" element={<Page404 />} />

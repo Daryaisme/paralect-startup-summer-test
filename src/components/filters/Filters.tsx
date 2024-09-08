@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import {
   Group,
   MultiSelect,
@@ -6,11 +7,10 @@ import {
   Stack,
   Button,
 } from '@mantine/core';
-
 import { UseFormReturnType } from '@mantine/form';
 import { genreApi } from '../../resources/genre';
+import { SORTING_METHODS } from './constants';
 import classes from './index.module.css';
-import { SORTINGS } from './constants';
 
 export type FormType = {
   genres: string[];
@@ -24,7 +24,7 @@ interface FormProps {
   form: UseFormReturnType<FormType>;
 }
 
-function Filters({ form }: FormProps) {
+const Filters: FC<FormProps> = ({ form }) => {
   const { data: genres } = genreApi.useList();
 
   const genresData = genres?.genres.map((genre) => ({
@@ -40,6 +40,7 @@ function Filters({ form }: FormProps) {
           placeholder="Select genre"
           data={genresData}
           searchable
+          maw={320}
           {...form.getInputProps('genres')}
         />
 
@@ -47,6 +48,7 @@ function Filters({ form }: FormProps) {
           label="Release year"
           placeholder="Select release year"
           data={new Array(100).fill(1).map((_, i) => (2024 - i).toString())}
+          miw={100}
           {...form.getInputProps('releaseYear')}
         />
 
@@ -69,7 +71,7 @@ function Filters({ form }: FormProps) {
           />
         </Group>
 
-        <Button variant="text" onClick={form.reset}>
+        <Button variant="text" mb={-27} onClick={form.reset}>
           Reset filters
         </Button>
       </Group>
@@ -77,13 +79,13 @@ function Filters({ form }: FormProps) {
       <Select
         label="Sort by"
         placeholder="Select kind of sort"
-        data={SORTINGS}
+        data={SORTING_METHODS}
         w="fit-content"
         className={classes.sortSelect}
         {...form.getInputProps('sortMethod')}
       />
     </Stack>
   );
-}
+};
 
 export default Filters;

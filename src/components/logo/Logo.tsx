@@ -1,8 +1,9 @@
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Group, Image, Title } from '@mantine/core';
 import logo from '../../assets/images/logo.svg';
-import { useNavigate } from 'react-router-dom';
 
-function Logo() {
+const Logo: FC = () => {
   const navigate = useNavigate();
 
   return (

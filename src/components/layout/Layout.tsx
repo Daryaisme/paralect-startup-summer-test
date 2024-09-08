@@ -1,15 +1,16 @@
-import { AppShell, Stack } from '@mantine/core';
+import { FC } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
+import { AppShell, Stack } from '@mantine/core';
 import Logo from '../logo/Logo';
-import classes from './Layout.module.css';
 import { linkType } from './types';
+import classes from './Layout.module.css';
 
 const navLinks: linkType[] = [
   { path: '/movies', label: 'Movies' },
-  { path: '/rated', label: 'Rated movies' },
+  { path: '/rated-movies', label: 'Rated movies' },
 ];
 
-function Layout() {
+const Layout: FC = () => {
   return (
     <AppShell
       navbar={{
@@ -20,6 +21,7 @@ function Layout() {
       <AppShell.Navbar p={24} bg="purple.1" withBorder={false}>
         <Stack gap={80}>
           <Logo />
+
           <Stack gap={16} fz={16} className={classes.cl}>
             {navLinks.map(({ path, label }) => (
               <NavLink
@@ -35,6 +37,7 @@ function Layout() {
           </Stack>
         </Stack>
       </AppShell.Navbar>
+      
       <AppShell.Main bg="grey.1">
         <Stack px={90} pb={80} pt={40} mih="100vh">
           <Outlet />

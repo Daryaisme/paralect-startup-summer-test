@@ -4,7 +4,6 @@ export interface GenreType {
 }
 
 interface ProductionCompanyType {
-  // [x: string]: any;
   id: number;
   logo_path: string | null;
   name: string;
