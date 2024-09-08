@@ -4,7 +4,6 @@ export interface GenreType {
 }
 
 interface ProductionCompanyType {
-  // [x: string]: any;
   id: number;
   logo_path: string | null;
   name: string;
@@ -55,7 +54,7 @@ export interface MoviesDataType {
   total_pages: number;
 }
 
-export interface GenreDataType {
+export interface GenresDataType {
   genres: GenreType[];
 }
 

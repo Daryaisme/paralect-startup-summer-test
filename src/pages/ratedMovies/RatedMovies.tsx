@@ -1,3 +1,5 @@
+import { FC, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Center,
@@ -10,99 +12,110 @@ import {
   Text,
   TextInput,
   Title,
+  useMantineTheme,
 } from '@mantine/core';
-import useFetch from '../../hooks/useFetch';
-import { GenreDataType, MovieType, RatedMovie } from '../../types';
 import { useLocalStorage } from '@mantine/hooks';
-import { useMemo, useRef, useState } from 'react';
+import { IconSearch } from '@tabler/icons-react';
+import { RatedMovie } from '../../types';
 import MovieCard from '../../components/movie/movieCard/MovieCard';
-import classes from './RatedMovies.module.css';
-import searchIcon from '../../assets/images/search-icon.svg';
 import noData from '../../assets/images/no-rated-movies.svg';
-import useMoviesQuery from '../../hooks/useMoviesQuery';
-import { useNavigate } from 'react-router-dom';
+import { genreApi } from '../../resources/genre';
+import { movieApi } from '../../resources/movie';
+import classes from './RatedMovies.module.css';
 
-const url = `${import.meta.env.VITE_URL}/genre/movie/list`;
+const RatedMovies: FC = () => {
+  const { colors } = useMantineTheme();
 
-function RatedMovies() {
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(1);
   const [title, setTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  console.log(title);
 
   const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
 
-  const urls = useMemo(
-    () =>
-      ratedMovies.map(({ id }) => `${import.meta.env.VITE_URL}/movie/${id}`),
-    [ratedMovies]
-  );
+  const ids = ratedMovies.map(({ id }) => id);
+
   const {
     data: movies,
-    isLoading,
-    isError,
-  } = urls
-    ? useMoviesQuery<MovieType>(urls)
-    : { data: null, isLoading: true, isError: true };
+    isLoading: isMoviesLoading,
+    isError: isMovieError,
+  } = movieApi.useListByIds(ids);
 
-  const { data: genres } = useFetch<GenreDataType>(url);
+  const { data: genres } = genreApi.useList();
 
   const filteredMovies = useMemo(
-    () => movies?.filter((movie) => movie.original_title.includes(title)),
+    () =>
+      movies?.filter((movie) =>
+        movie?.original_title.toLowerCase().includes(title.toLowerCase())
+      ),
     [movies, title]
   );
 
-  let currentMovies = filteredMovies?.slice((page - 1) * 4, (page - 1) * 4 + 4);
+  const currentMovies = filteredMovies?.slice(
+    (page - 1) * 4,
+    (page - 1) * 4 + 4
+  );
 
   function handleClickSearchButton() {
     setPage(1);
     setTitle(inputRef.current?.value || '');
   }
 
-  const navigate = useNavigate();
+  if (isMoviesLoading)
+    return (
+      <Center className={classes.loadingWrapper}>
+        <Loader size="lg" />
+      </Center>
+    );
 
-  if (isLoading) return <Loader />;
-  if (isError) return 'error';
+  if (isMovieError) return 'error';
+
   return (
     <>
-      {movies?.length ? (
+      {currentMovies.length ? (
         <Stack gap={24}>
-          <Group>
+          <Group justify="space-between">
             <Title order={2}>Rated movies</Title>
+
             <TextInput
               ref={inputRef}
-              leftSection={<Image src={searchIcon} w={16} />}
+              leftSection={
+                <IconSearch size={16} color={colors.grey[5]} stroke={1.5} />
+              }
               rightSection={
                 <Button
-                  onClick={handleClickSearchButton}
                   variant="filled"
-                  py={8}
-                  px={12}
-                  bg="purple.5"
+                  mr={12}
+                  onClick={handleClickSearchButton}
                 >
                   Search
                 </Button>
               }
               classNames={{
-                section: classes.search_section,
-                input: classes.search_input,
+                section: classes.searchSection,
+                input: classes.searchInput,
               }}
             />
           </Group>
+
           <SimpleGrid cols={2}>
-            {currentMovies?.map((movie) => (
-              <MovieCard
-                movie={movie}
-                key={movie.id}
-                genres={genres?.genres ?? []}
-              />
-            ))}
+            {currentMovies.map(
+              (movie) =>
+                movie && (
+                  <MovieCard
+                    movie={movie}
+                    key={movie.id}
+                    genres={genres?.genres ?? []}
+                  />
+                )
+            )}
           </SimpleGrid>
-          {filteredMovies && filteredMovies.length > 4 && (
+
+          {filteredMovies.length > 4 && (
             <Pagination
               mx="auto"
               total={Math.min(Math.ceil(movies.length / 4), 50)}
@@ -111,33 +124,29 @@ function RatedMovies() {
               onChange={setPage}
               boundaries={-1}
               classNames={{
-                root: classes.pagination_container,
-                dots: classes.pagination_dots,
+                root: classes.paginationContainer,
+                dots: classes.paginationDots,
               }}
             />
           )}
         </Stack>
       ) : (
-        <Center mih='calc(100vh - 40px - 82px)'>
+        <Center className={classes.errorWrapper}>
           <Stack align="center" gap={16}>
             <Image src={noData} w={311} />
+
             <Text fz={20} fw={600}>
               We don't have such movies, look for another one
             </Text>
-            <Button
-          color="purple.5"
-          px={20}
-          py={10}
-          variant="filled"
-          onClick={() => navigate('/')}
-        >
-          Go Home
-        </Button>
+
+            <Button variant="filled" size="md" onClick={() => navigate('/')}>
+              Find movies
+            </Button>
           </Stack>
         </Center>
       )}
     </>
   );
-}
+};
 
 export default RatedMovies;

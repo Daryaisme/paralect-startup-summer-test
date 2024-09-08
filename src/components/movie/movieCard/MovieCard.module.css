@@ -1,10 +1,12 @@
-.star_container {
-  align-self: flex-start;
-  flex-wrap: nowrap;
-}
-.movie_container {
+.container {
   border-radius: 12px;
-  background-color: var(--mantine-color-white);
-  padding: 24px;
-  font-size: 16px;
+}
+
+.informationContainer {
+  flex-grow: 1;
+}
+
+.imageContainer,
+.titleContainer {
+  overflow: hidden;
 }

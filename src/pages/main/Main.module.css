@@ -1,6 +1,12 @@
-.pagination_container {
+.loadingWrapper,
+.errorWrapper {
+  flex-grow: 1;
+}
+
+.paginationContainer {
   align-self: flex-end;
-} 
-.pagination_dots {
+}
+
+.paginationDots {
   display: none;
 }

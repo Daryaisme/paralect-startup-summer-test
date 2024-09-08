@@ -1,12 +1,22 @@
-.pagination_container {
+.loadingWrapper,
+.errorWrapper {
+  flex-grow: 1;
+}
+
+.paginationContainer {
   align-self: flex-end;
-} 
-.pagination_dots {
+}
+
+.paginationDots {
   display: none;
 }
-.search_section[data-position="right"] {
-  width: fit-content;
-}
-.search_section[data-position="right"] button {
-  width: 88px;
+
+.searchSection {
+  &[data-position='right'] {
+    width: fit-content;
+
+    & button {
+      width: 88px;
+    }
+  }
 }

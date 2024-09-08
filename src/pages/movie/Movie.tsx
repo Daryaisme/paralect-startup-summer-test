@@ -1,85 +1,127 @@
+import { FC } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Anchor,
   Avatar,
   Breadcrumbs,
+  Center,
   Divider,
   Group,
   Loader,
   Stack,
   Text,
 } from '@mantine/core';
+import { IconMovie } from '@tabler/icons-react';
 import MovieDetailsCard from '../../components/movie/movieDetails/MovieDetailsCard';
-import { useParams } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
-import { MovieDetailsType } from '../../types';
+import { movieApi } from '../../resources/movie';
 import classes from './Movie.module.css';
 
-function MoviePage() {
-  let { id } = useParams();
-  const url = `${import.meta.env.VITE_URL}/movie/${id}?append_to_response=videos`;
+const MoviePage: FC = () => {
+  const { id } = useParams();
 
-  const { data , isLoading, isError } = useFetch<MovieDetailsType>(url);
+  const {
+    data: movie,
+    isLoading: isMovieLoading,
+    isError: isMovieError,
+  } = movieApi.useGet(Number(id));
 
   const items = [
     { title: 'Movies', href: '/movies' },
-    { title: data?.original_title, href: '#' },
+    { title: movie?.original_title, href: '#' },
   ].map((item, index) => (
     <Anchor href={item.href} key={index}>
       {item.title}
     </Anchor>
   ));
 
-  if (isLoading) <Loader />
-  if (isError) <>error</>
+  if (isMovieLoading)
+    return (
+      <Center className={classes.loadingWrapper}>
+        <Loader size="lg" />
+      </Center>
+    );
+
+  if (isMovieError) 'error';
+
   return (
     <Stack px={90} gap={20}>
-      {data && (
+      {movie && (
         <>
           <Breadcrumbs className={classes.breadcrumbs}>{items}</Breadcrumbs>
-          <MovieDetailsCard movie={data}></MovieDetailsCard>
-          {/* <MovieTrailer trailer={data}></MovieTrailer> */}
-          <Stack className={classes.trailer_container}>
-            <Text fz={20} fw={700}>
-              Trailer
-            </Text>
-            {data.videos.results[0] && (
-              <iframe
-                width="500"
-                height="281"
-                src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
-                allowFullScreen
-                className={classes.video}
-              ></iframe>
-            )}
-            <Divider c="grey.3"></Divider>
-            <Stack gap={16}>
-              <Text fz={20} fw={700}>
-                Description
-              </Text>
-              <Text>{data.overview}</Text>
+
+          <MovieDetailsCard movie={movie} />
+
+          {(movie.videos.results[0] ||
+            movie.overview ||
+            movie.production_companies.length > 0) && (
+            <Stack className={classes.trailerContainer}>
+              {movie.videos.results[0] && (
+                <>
+                  <Text fz={20} fw={700}>
+                    Trailer
+                  </Text>
+
+                  <iframe
+                    width="500"
+                    height="281"
+                    src={`https://www.youtube.com/embed/${movie.videos.results[0].key}`}
+                    allowFullScreen
+                    className={classes.video}
+                  />
+
+                  <Divider c="grey.3" />
+                </>
+              )}
+
+              {movie.overview && (
+                <>
+                  <Stack gap={16}>
+                    <Text fz={20} fw={700}>
+                      Description
+                    </Text>
+
+                    <Text>{movie.overview}</Text>
+                  </Stack>
+
+                  <Divider c="grey.3" />
+                </>
+              )}
+
+              {movie.production_companies.length > 0 && (
+                <>
+                  <Stack gap={16}>
+                    <Text fz={20} fw={700}>
+                      Production
+                    </Text>
+
+                    <Stack gap={12}>
+                      {movie.production_companies.map((company) => (
+                        <Group key={company.id} gap={8}>
+                          <Avatar
+                            src={`https://image.tmdb.org/t/p/original${company.logo_path}`}
+                            classNames={{
+                              image: classes.avatarImage,
+                              root: classes.avatarRoot,
+                              placeholder: classes.avatarPlaceholder,
+                            }}
+                            children={<IconMovie stroke={1} />}
+                          />
+
+                          <Text fw={700}>{company.name}</Text>
+                        </Group>
+                      ))}
+                    </Stack>
+                  </Stack>
+
+                  <Divider c="grey.3" />
+                </>
+              )}
             </Stack>
-            <Divider c="grey.3"></Divider>
-            <Stack gap={16}>
-              <Text fz={20} fw={700}>
-                Production
-              </Text>
-              <Stack gap={12}>
-                {data.production_companies && data.production_companies.map((company) => (
-                  <Group key={company.id} gap={8}>
-                    <Avatar
-                      src={`https://image.tmdb.org/t/p/original${company.logo_path}` || null}
-                      classNames={{ image: classes.avatar_image, root: classes.avatar_root }}
-                    />
-                    <Text fw={700}>{company.name}</Text>
-                  </Group>
-                ))}
-              </Stack>
-            </Stack>
-          </Stack>
+          )}
         </>
       )}
     </Stack>
   );
-}
+};
 
 export default MoviePage;

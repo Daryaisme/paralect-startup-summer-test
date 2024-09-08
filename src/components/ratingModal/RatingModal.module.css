@@ -1,7 +1,24 @@
-.modal_header {
+.header {
   border-bottom: 1px var(--mantine-color-grey-2) solid;
-  margin-bottom: 16px;
+  padding: 16px;
 }
-.modal_content {
-  border-radius: 8px;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.close {
+  & svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: var(--mantine-color-grey-5);
+  }
+
+  &:hover {
+    & svg {
+      color: var(--mantine-color-grey-6);
+    }
+  }
 }

@@ -1,5 +1,9 @@
+import { FC, MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
+  ActionIcon,
   Box,
+  Flex,
   Group,
   Image,
   Stack,
@@ -7,121 +11,156 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { GenreType, MovieType, RatedMovie } from '../../../types';
-import Star from '../../star/Star';
-import RatingModal from '../../ratingModal/RatingModal';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
+import { IconStarFilled } from '@tabler/icons-react';
+import {
+  GenreType,
+  MovieDetailsType,
+  MovieType,
+  RatedMovie,
+} from '../../../types';
+import RatingModal from '../../ratingModal/RatingModal';
+import { formatVotesCount } from '../movie.utils';
+import fallbackImage from '../../../assets/images/no-photo.svg';
 import classes from './MovieCard.module.css';
-import { useNavigate } from 'react-router-dom';
-import fallbackimage from '../../../assets/images/no-photo.svg';
 
 interface MovieCardProps {
-  movie: MovieType;
+  movie: MovieType | MovieDetailsType;
   genres: GenreType[];
 }
 
-export function formatVotesCount(num: number) {
-  const suffixes = ['', 'K', 'M'];
+const MovieCard: FC<MovieCardProps> = ({ movie, genres: allGenres }) => {
+  const { colors } = useMantineTheme();
 
-  let c = 0;
-  while (num >= 1000 && c < suffixes.length - 1) {
-    num /= 1000;
-    c++;
-  }
+  const navigate = useNavigate();
 
-  return num.toFixed(1).replace(/\.0$/, '') + suffixes[c];
-}
-
-function MovieCard({
-  movie: {
+  const {
     id,
     original_title,
     poster_path,
     release_date,
     vote_average,
     vote_count,
-  },
-}: MovieCardProps) {
-  const theme = useMantineTheme();
+  } = movie;
 
-  // const genresText = genres
-  //   .filter((genre) => genre_ids.includes(genre.id))
-  //   .map(({ name }) => name)
-  //   .join(', ');
+  const [
+    isRatingModalOpened,
+    { open: ratingModalOpen, close: ratingModalClose },
+  ] = useDisclosure(false);
 
-  const [opened, { open, close }] = useDisclosure(false);
+  const genresText = (
+    'genre_ids' in movie
+      ? allGenres
+          .filter((genre) => movie.genre_ids.includes(genre.id))
+          .map(({ name }) => name)
+      : movie.genres.map(({ name }) => name)
+  ).join(', ');
 
   const [ratedMovies] = useLocalStorage<RatedMovie[]>({
     key: 'ratedMovies',
     defaultValue: [],
   });
 
-  const movie = ratedMovies.find((movie) => movie.id === id);
+  const ratedMovie = ratedMovies.find((movie) => movie.id === id);
 
-  const navigate = useNavigate();
+  const handleStarIconClick = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    ratingModalOpen();
+  };
 
   return (
-    <Box
-      className={classes.movie_container}
-      onClick={() => navigate(`/movies/${id}`)}
-    >
-      <Group align="stretch" gap={16} wrap="nowrap">
-        <Box w={120} h={170}>
+    <>
+      <RatingModal
+        movie={{ id, original_title }}
+        opened={isRatingModalOpened}
+        onClose={ratingModalClose}
+      />
+
+      <Group
+        align="stretch"
+        gap={16}
+        wrap="nowrap"
+        bg="white"
+        p={24}
+        fz={16}
+        onClick={() => navigate(`/movies/${id}`)}
+        className={classes.container}
+      >
+        <Flex
+          w={120}
+          h={170}
+          align="center"
+          justify="space-around"
+          className={classes.imageContainer}
+        >
           <Image
             src={`https://image.tmdb.org/t/p/original${poster_path}`}
-            fallbackSrc={fallbackimage}
-            w={120}
+            fallbackSrc={fallbackImage}
             h={170}
           />
-        </Box>
-        <Stack justify="space-between" w='calc(100% - 120px - 16px)'>
-          <Group justify="space-between" wrap="nowrap">
-            <Stack gap={8}>
+        </Flex>
+
+        <Stack
+          justify="space-between"
+          maw="calc(100% - 136px)"
+          className={classes.informationContainer}
+        >
+          <Group
+            justify="space-between"
+            align="flex-start"
+            wrap="nowrap"
+            gap={15}
+          >
+            <Stack gap={8} className={classes.titleContainer}>
               <Title order={3} c="purple.5" lineClamp={2}>
                 {original_title}
               </Title>
+
               <Text size="md" c="grey.6" lh="20px">
-                {new Date(release_date).getFullYear() || 'no date'}
+                {new Date(release_date).getFullYear() || 'no data'}
               </Text>
-              <Group gap={8} fw={600} fz="md">
-                <Group gap={4}>
-                  <Star color={theme.colors.yellow[1]} />
-                  {Math.round(vote_average * 10) / 10}
+
+              {vote_count > 0 && (
+                <Group gap={8}>
+                  <Group gap={4} fw={600}>
+                    <IconStarFilled color={colors.yellow[1]} />
+
+                    {Math.round(vote_average * 10) / 10}
+                  </Group>
+
+                  <Box c="grey.6">{`(${formatVotesCount(vote_count)})`}</Box>
                 </Group>
-                <Box
-                  c="grey.6"
-                  fw={400}
-                >{`(${formatVotesCount(vote_count)})`}</Box>
-              </Group>
+              )}
             </Stack>
-            <Group
-              className={classes.star_container}
-              onClick={(e) => {
-                e.stopPropagation();
-                open();
-              }}
-              gap={4}
-            >
-              <Star
-                color={movie ? theme.colors.purple[5] : theme.colors.grey[3]}
-              />
-              {movie && <Text fw={600}>{movie.rating}</Text>}
+
+            <Group gap={4} wrap="nowrap">
+              <ActionIcon
+                bg="transparent"
+                onClick={(e) => handleStarIconClick(e)}
+              >
+                <IconStarFilled
+                  color={ratedMovie ? colors.purple[5] : colors.grey[3]}
+                />
+              </ActionIcon>
+
+              {ratedMovie && <Text fw={600}>{ratedMovie.rating}</Text>}
             </Group>
           </Group>
-          <Group gap={8} fw={400} wrap="nowrap">
-            <Text c="grey.6">Genres</Text>
-            {/* <Text className={classes.text_clipped} lineClamp={1}>{genresText}</Text> */}
-          </Group>
+
+          {genresText && (
+            <Group gap={8} fw={400} maw="100%" wrap="nowrap">
+              <Text c="grey.6">Genres</Text>
+
+              <Text lineClamp={1}>{genresText}</Text>
+            </Group>
+          )}
         </Stack>
       </Group>
-      <RatingModal
-        id={id}
-        title={original_title}
-        opened={opened}
-        close={close}
-      />
-    </Box>
+    </>
   );
-}
+};
 
 export default MovieCard;
